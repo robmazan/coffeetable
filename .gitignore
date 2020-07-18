@@ -1,2 +1,4 @@
 *_temp
 logs/*.log
+media/*
+!media/.gitkeep
