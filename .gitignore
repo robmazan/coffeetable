@@ -1,3 +1,4 @@
+resty_modules
 *_temp
 logs/*.log
 media/*
