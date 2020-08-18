@@ -1,0 +1,13 @@
+version: '2.0'
+services:
+  keycloak:
+    image: jboss/keycloak
+    command: ["-b", "0.0.0.0", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=dir", "-Dkeycloak.migration.dir=/opt/jboss/keycloak/realm-config", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING", "-Dkeycloak.profile.feature.upload_scripts=enabled"]
+    volumes: 
+      - ./.docker/realm-config:/opt/jboss/keycloak/realm-config
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=h2
+    ports:
+      - "9080:8080"

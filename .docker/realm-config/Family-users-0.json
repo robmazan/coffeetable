@@ -1,0 +1,68 @@
+{
+  "realm" : "Family",
+  "users" : [ {
+    "id" : "08c79f38-f169-4611-bedf-f1415bd139c7",
+    "createdTimestamp" : 1597774133547,
+    "username" : "service-account-coffeetable",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "serviceAccountClientId" : "coffeetable",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "coffeetable" : [ "uma_protection" ],
+      "account" : [ "manage-account", "view-profile" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "ba119c2d-3fb7-4e0f-bbd7-9b6db4448272",
+    "createdTimestamp" : 1597774385615,
+    "username" : "uploader",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "credentials" : [ {
+      "id" : "babda1c3-a39f-4ab3-9adb-11c0c27a3b54",
+      "type" : "password",
+      "createdDate" : 1597774396169,
+      "secretData" : "{\"value\":\"qhn5fa39jxWDrFxq1DzaTpILuOxPQ3zIzwa4zsoStKuIO/OUEaUIEIoCQVDxnem6AULY3qVOlxtgp5x7Zyn97w==\",\"salt\":\"+VmEBZRXepl/3JDZNVofBg==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "coffeetable" : [ "view", "upload" ],
+      "account" : [ "manage-account", "view-profile" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "16152c31-31e7-4391-ae2a-924c33421c08",
+    "createdTimestamp" : 1597774362497,
+    "username" : "viewer",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "credentials" : [ {
+      "id" : "b5e26631-8038-4db2-a4f3-639ab4fa852d",
+      "type" : "password",
+      "createdDate" : 1597774375080,
+      "secretData" : "{\"value\":\"kAZi62FgjgP/Cz2MtJQ8T09mmMms5vGFPdt/eMonT3xCM/ua18R+/YhRi+Eq1P0pfCcbz5HuvtvFKMqSNqGWpQ==\",\"salt\":\"rjAu05Z5GfEY93FpdTi5cw==\"}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "coffeetable" : [ "view" ],
+      "account" : [ "manage-account", "view-profile" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}
