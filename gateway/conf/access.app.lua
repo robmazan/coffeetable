@@ -1,8 +1,8 @@
 local opts = {
     redirect_uri = "/index.html",
-    discovery = ngx.var.oidc_discovery_url,
-    client_id = ngx.var.oidc_client_id,
-    client_secret = ngx.var.oidc_client_secret,
+    discovery = os.getenv("oidc_discovery_url"),
+    client_id = os.getenv("oidc_client_id"),
+    client_secret = os.getenv("oidc_client_secret"),
     scope = "openid email profile roles",
     logout_path = "/logout",
     redirect_after_logout_uri = "/",
