@@ -10,19 +10,19 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - DB_VENDOR=h2
-  client:
-    build: ./client-app
+  frontend:
+    build: ./frontend
     volumes: 
-      - /client-app-build:/usr/src/app/build
-  gateway:
-    build: ./gateway
+      - /frontend-app-build:/usr/src/app/build
+  backend:
+    build: ./backend
     depends_on:
       - keycloak
     volumes:
-      - /client-app-build:/var/www/coffeetable.app
+      - /frontend-app-build:/var/www/coffeetable.app
       - ./.docker/certs:/etc/nginx/certs
-      - ./gateway/templates:/etc/nginx/templates
-      - ./gateway/src:/opt/coffeetable
+      - ./backend/templates:/etc/nginx/templates
+      - ./backend/src:/opt/coffeetable
     environment:
       - APP_ROOT="/opt/coffeetable"
       - APP_CERT_FILE="/etc/nginx/certs/selfsigned.app.crt"
@@ -49,4 +49,4 @@ services:
       - "443:443"
   
 volumes: 
-  client-app-build:
+  frontend-app-build:
