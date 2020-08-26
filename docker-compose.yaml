@@ -6,8 +6,47 @@ services:
     volumes: 
       - ./.docker/realm-config:/opt/jboss/keycloak/realm-config
     environment:
+      - PROXY_ADDRESS_FORWARDING=true
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - DB_VENDOR=h2
-    ports:
-      - "9080:8080"
+  client:
+    build: ./client-app
+    volumes: 
+      - /client-app-build:/usr/src/app/build
+  gateway:
+    build: ./gateway
+    depends_on:
+      - keycloak
+    volumes:
+      - /client-app-build:/var/www/coffeetable.app
+      - ./.docker/certs:/etc/nginx/certs
+      - ./gateway/templates:/etc/nginx/templates
+      - ./gateway/src:/opt/coffeetable
+    environment:
+      - APP_ROOT="/opt/coffeetable"
+      - APP_CERT_FILE="/etc/nginx/certs/selfsigned.app.crt"
+      - APP_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.app.key"
+      - APP_SERVER_NAME="coffeetable.app"
+      - AUTH_CERT_FILE="/etc/nginx/certs/selfsigned.auth.crt"
+      - AUTH_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.auth.key"
+      - AUTH_SERVER_NAME="auth.coffeetable.app"
+      - MEDIA_CERT_FILE="/etc/nginx/certs/selfsigned.media.crt"
+      - MEDIA_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.media.key"
+      - MEDIA_SERVER_NAME="media.coffeetable.app"
+      - KEYCLOAK_ADDRESS="keycloak:8080"
+      - OIDC_DISCOVERY_URL="https://auth.coffeetable.app/auth/realms/Family/.well-known/openid-configuration"
+      - OIDC_CLIENT_ID="coffeetable"
+      - OIDC_CLIENT_SECRET="a9ee35e3-0334-41de-b348-7b55780d9e09"
+    networks:
+      default:
+        aliases: 
+          - coffeetable.app
+          - auth.coffeetable.app
+          - media.coffeetable.app
+    ports: 
+      - "80:80"
+      - "443:443"
+  
+volumes: 
+  client-app-build:
