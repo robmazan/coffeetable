@@ -34,6 +34,7 @@ services:
       - MEDIA_CERT_FILE="/etc/nginx/certs/selfsigned.media.crt"
       - MEDIA_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.media.key"
       - MEDIA_SERVER_NAME="media.coffeetable.app"
+      - MEDIA_ROOT="/media"
       - KEYCLOAK_ADDRESS="keycloak:8080"
       - OIDC_DISCOVERY_URL="https://auth.coffeetable.app/auth/realms/Family/.well-known/openid-configuration"
       - OIDC_CLIENT_ID="coffeetable"

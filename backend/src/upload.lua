@@ -3,13 +3,18 @@ local upload = require 'resty.upload'
 local cjson = require 'cjson'
 local resty_md5 = require 'resty.md5'
 
--- ngx.say(cjson.encode(session.data))
--- ngx.exit(ngx.HTTP_OK)
+local function process_upload(filename, meta, md5_sum)
+    local username = session.data.id_token.preferred_username
+    local handle = io.popen('exiftool -struct -b -j -d "%Y-%m-%d %H:%M:%S" -c "%.15f" '..filename)
+    local output = handle:read("*a")
+    handle.close()
+    ngx.say(output)
+    ngx.exit(ngx.HTTP_OK)
+end
+
 if not session.data or not session.data.id_token then
     ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
-
-local username = session.data.id_token.preferred_username
 
 -- TODO: pass media root path, create username directory if not exists
 --       get tempname, save file, read exif, rename file, create DB rec
@@ -22,6 +27,7 @@ end
 
 local md5 = resty_md5:new()
 local file
+local filename
 local meta = {
     original_name = '',
     mime_type = ''
@@ -30,8 +36,11 @@ while true do
     local typ, res, err = form:read()
 
     if not typ then
-            ngx.say("failed to read: ", err)
-            return
+        ngx.log(ngx.ERR, "Failed to read uploaded file: ", err)
+        ngx.say(cjson.encode({
+            message = "File upload failed, cannot process upload"
+        }))
+        ngx.exit(ngx.ERROR)
     end
 
     if typ == "header" then
@@ -47,35 +56,32 @@ while true do
             meta.original_name = filename
         end
         
-    --     local file_name = my_get_file_name(res)
-    --     if file_name then
-    --         file = io.open(file_name, "w+")
-    --         if not file then
-    --             ngx.say("failed to open file ", file_name)
-    --             return
-    --         end
-    --     end
+        filename = os.tmpname()
+        file = io.open(filename, "w+")
+        if not file then
+            ngx.log(ngx.err, "Error during upload: cannot create temp file")
+            ngx.say(cjson.encode({
+                message = "File upload failed, unable to create file on server"
+            }))
+            ngx.exit(ngx.ERROR)
+        end
 
-        elseif typ == "body" then
-            ngx.say(cjson.encode(meta))
-
-    --     if file then
-    --         file:write(res)
-    --         md5:update(res)
-        -- end
+    elseif typ == "body" then
+        if file then
+            file:write(res)
+            md5:update(res)
+        end
 
     elseif typ == "part_end" then
-    --     file:close()
-    --     file = nil
-    --     local md5_sum = md5:final()
-    --     md5:reset()
-    --     my_save_sha1_sum(md5_sum)
+        file:close()
+        file = nil
+        local md5_sum = md5:final()
+        md5:reset()
+        process_upload(filename, meta, md5_sum)
 
     elseif typ == "eof" then
         break
 
-    -- else
-    --     -- do nothing
     end
 end
 
