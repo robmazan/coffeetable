@@ -44,7 +44,7 @@ The solution should work with acceptable performance on a Raspberry Pi.
 Abbreviation/acronym | Description
 -------------------- |------------
 OIDC                 | OpenID Connect (see [specifications](https://openid.net/connect/) )
-UMA                  | User-Managed Access (see [UMA FAQ](https://kantarainitiative.or g/confluence/display/uma/UMA+FAQ))
+UMA                  | User-Managed Access (see [UMA FAQ](https://kantarainitiative.org/confluence/display/uma/UMA+FAQ))
 2FA                  | Two-factor authentication
 Exif                 | Exchangeable image file format
 
