@@ -42,15 +42,15 @@ services:
     networks:
       coffeetable:
   
-  frontend:
-    build: ./frontend
+  spa:
+    build: ./spa
     volumes: 
-      - /frontend-app-build:/usr/src/app/build
+      - /single-page-app-build:/usr/src/app/build
 
   webapp:
     build: ./webapp
     volumes:
-      - /frontend-app-build:/var/www/coffeetable.app
+      - /single-page-app-build:/var/www/coffeetable.app
       - ./.docker/certs:/etc/nginx/certs
       - ./webapp/templates:/etc/nginx/templates
       - ./webapp/src:/opt/coffeetable
@@ -71,7 +71,7 @@ services:
       coffeetable:
 
 volumes: 
-  frontend-app-build:
+  single-page-app-build:
 
 networks: 
   coffeetable:
