@@ -8,6 +8,7 @@
   - [Goals](#goals)
   - [Definitions, acronyms, abbreviations](#definitions-acronyms-abbreviations)
 - [High-level requirements](#high-level-requirements)
+  - [Information Architecture Overview](#information-architecture-overview)
 - [Technology choices](#technology-choices)
   - [OpenResty](#openresty)
   - [PostgreSQL and Postgrest](#postgresql-and-postgrest)
@@ -24,8 +25,6 @@
     - [Authentication Proxy](#authentication-proxy)
     - [Single-Page Application](#single-page-application)
   - [Data model](#data-model)
-  - [Information Architecture Overview](#information-architecture-overview)
-- [Deployment approaches](#deployment-approaches)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -66,6 +65,16 @@ Users who are authorized to do uploads have the same privileges as viewers plus 
 * Change the order media is shown in an album
 * Select cover photo for the album
 * Edit album title
+
+### Information Architecture Overview
+
+![Information Architecture Diagram](images/ia.png)
+
+The users land on their *Photostream* page. On this page by default, they see all their photos ordered by *Date Taken* and in a *Daily* grouping. They can change the sorting to sort by *Date uploaded* and the grouping to *Monthly* or *Location*-based grouping or turn off grouping completely to simply show a continuous stream.
+
+They can initiate file upload where they can select multiple media files present on the device and send them to the Web Application for processing.
+
+For the MVP the sharing part is managed partially with Keycloak: we rely on Keycloak's UMA interface for sharing albums with other users. Creating, listing, and editing albums will be part of the Single-Page Application functionality.
 
 ## Technology choices
 
@@ -119,9 +128,14 @@ Serves all the static assets related to the Single-Page Application.
 
 Transforms media related queries into Media API requests, enriches proxied headers by adding bearer token to the Authentication header (provided from the session).
 
+![Component Diagram for the Web Application](images/web_application_component.png)
+
 Manages media uploads: handles the physical file upload, extracts metadata using the `exiftool`, moves the uploaded file to the user's folder on the File System, stores metadata in the DB using the Media API.
 
+![Dynamic Diagram for media upload](images/upload.png)
+
 If the UMA interfaces provided by Keycloak turns out to be not usable enough, the Web Application's responsibility will be to provide an appropriate API to the Single-Page Application for users to manage their own albums sharing.
+
 
 #### Media API
 
@@ -144,15 +158,3 @@ Provides UI to the end-user to see their own photos sorted and grouped as they c
 ![Logical Data Structure](images/logical_data_structure.png)
 
 After uploading a media file the metadata will be extracted using the `exiftool`. This metadata goes through a normalization process where unusable information (e.g. filename, which is a temp name in this case) gets removed. The rest of the metadata will be saved with the media entry as `JSONB`. To make certain queries easier however, we store some important data as fields too - this makes it possible to easily sort and group the queried entries.
-
-### Information Architecture Overview
-
-![Information Architecture Diagram](images/ia.png)
-
-The users land on their *Photostream* page. On this page by default, they see all their photos ordered by *Date Taken* and in a *Daily* grouping. They can change the sorting to sort by *Date uploaded* and the grouping to *Monthly* or *Location*-based grouping or turn off grouping completely to simply show a continuous stream.
-
-They can initiate file upload where they can select multiple media files present on the device and send them to the Web Application for processing.
-
-For the MVP the sharing part is managed partially with Keycloak: we rely on Keycloak's UMA interface for sharing albums with other users. Creating, listing, and editing albums will be part of the Single-Page Application functionality.
-
-## Deployment approaches
