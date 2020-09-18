@@ -22,7 +22,7 @@
     - [Web Application](#web-application)
     - [Media API](#media-api)
     - [Media Resource Server](#media-resource-server)
-    - [Authentication Proxy](#authentication-proxy)
+    - [Gateway](#gateway)
     - [Single-Page Application](#single-page-application)
   - [Data model](#data-model)
 
