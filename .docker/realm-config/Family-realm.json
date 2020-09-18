@@ -497,7 +497,7 @@
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "a9ee35e3-0334-41de-b348-7b55780d9e09",
-    "redirectUris" : [ "https://coffeetable.app/*" ],
+    "redirectUris" : [ "https://coffeetable.app/*", "https://coffeetable.app:443/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,

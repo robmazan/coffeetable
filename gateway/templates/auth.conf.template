@@ -1,5 +1,5 @@
 upstream keycloak {
-    server $KEYCLOAK_ADDRESS;
+    server $AUTH_SERVER_ADDRESS;
 }
 
 server {

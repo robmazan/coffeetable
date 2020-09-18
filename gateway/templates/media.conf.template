@@ -1,0 +1,20 @@
+upstream resource-server {
+    server $MEDIA_SERVER_HOST;
+}
+
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name $MEDIA_SERVER_NAME;
+    
+    ssl_certificate $MEDIA_CERT_FILE;
+    ssl_certificate_key $MEDIA_CERT_KEY_FILE;
+
+    location / {
+        proxy_set_header X-Forwarded-Host $host:$server_port;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://resource-server/;
+    }
+}

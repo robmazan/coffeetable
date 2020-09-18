@@ -46,6 +46,7 @@ OIDC                 | OpenID Connect (see [specifications](https://openid.net/c
 UMA                  | User-Managed Access (see [UMA FAQ](https://kantarainitiative.org/confluence/display/uma/UMA+FAQ))
 2FA                  | Two-factor authentication
 Exif                 | Exchangeable image file format
+SPA                  | Single-Page Application
 
 ## High-level requirements
 
@@ -122,11 +123,7 @@ A command-line tool that is used to extract metadata from media files. This data
 
 #### Web Application
 
-Controls access to the Single-Page Application: stores the OIDC access token in the HTTP session identified by a session cookie and if the session or the cookie is not existing or expired it initiates redirect to Keycloak to log in (via the Authentication Proxy).
-
 Serves all the static assets related to the Single-Page Application.
-
-Transforms media related queries into Media API requests, enriches proxied headers by adding bearer token to the Authentication header (provided from the session).
 
 ![Component Diagram for the Web Application](images/web_application_component.png)
 
@@ -134,8 +131,9 @@ Manages media uploads: handles the physical file upload, extracts metadata using
 
 ![Dynamic Diagram for media upload](images/upload.png)
 
-If the UMA interfaces provided by Keycloak turns out to be not usable enough, the Web Application's responsibility will be to provide an appropriate API to the Single-Page Application for users to manage their own albums sharing.
+Provides restricted access to the Media API so the Single-Page Application can run queries for media items.
 
+If the UMA interfaces provided by Keycloak turns out to be not usable enough, the Web Application's responsibility will be to provide an appropriate API to the Single-Page Application for users to manage their own albums sharing.
 
 #### Media API
 
@@ -145,9 +143,9 @@ Provides REST API over the DB for the Web Application. No direct access is possi
 
 Serves uploaded media files to the Single-Page Application after checking the downloading user's permissions first with Keycloak.
 
-#### Authentication Proxy
+#### Gateway
 
-A simple SSL terminating proxy to the running Keycloak instance. This way we don't have to manage certificates in Keycloak, plus this adds an extra (highly configurable) security layer where we can introduce extra security measures (e.g. request throttling) to protect the Keycloak instance from attacks.
+All requests to the internal services are going through the Gateway. It also proxies application related requests (from the SPA) to the Web Application, and media file requests to the Media Resource Server but before doing so it enforces authentication using Keycloak - for that it directly proxies all auth requests to the Keycloak instance. For all proxied requests it attaches an `Authentication` header with the access token as bearer token so the internal services can identify the users and access their roles.
 
 #### Single-Page Application
 
