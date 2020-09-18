@@ -1,6 +1,7 @@
 version: '2.0'
 services:
   gateway: 
+    # TODO: convert to OpenResty and implement auth enforcement + bearer token passing
     image: nginx
     volumes:
       - ./.docker/certs:/etc/nginx/certs
