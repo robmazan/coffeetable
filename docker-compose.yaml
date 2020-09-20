@@ -47,6 +47,42 @@ services:
     networks:
       coffeetable:
   
+  postgres:
+    image: postgres
+    environment: 
+      - POSTGRES_PASSWORD=SecurePostgresPassword
+      - POSTGRES_DB=coffeetable
+    volumes: 
+      - /db:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway
+    command: -url=jdbc:postgresql://postgres/coffeetable -schemas=api -user=postgres -password=SecurePostgresPassword -connectRetries=60 migrate
+    depends_on: 
+      - postgres
+    volumes: 
+      - ./media-api/sql:/flyway/sql
+    
+  postgrest:
+    image: postgrest/postgrest
+    depends_on:
+      - postgres
+    environment: 
+      - PGRST_DB_URI=postgres://postgres:SecurePostgresPassword@postgres:5432/coffeetable
+      - PGRST_DB_SCHEMA=api
+      - PGRST_DB_ANON_ROLE=postgres
+    ports:
+      - "3000:3000"
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    environment:
+      API_URL: http://localhost:3000/
+
   spa:
     build: ./spa
     volumes: 
@@ -69,12 +105,19 @@ services:
       coffeetable:
 
   media:
-    image: nginx  
+    build: ./media-resource-server
+    environment: 
+      - MEDIA_ROOT=/media
+    volumes: 
+      - /media:/media
+      - ./media-resource-server/templates:/etc/nginx/templates
     networks:
       coffeetable:
 
 volumes: 
   single-page-app-build:
+  db:
+  media:
 
 networks: 
   coffeetable:
