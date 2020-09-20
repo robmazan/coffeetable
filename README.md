@@ -18,6 +18,7 @@ Next, you need to add the following lines to your `hosts` file so your computer 
 127.0.0.1 coffeetable.app
 127.0.0.1 auth.coffeetable.app
 127.0.0.1 media.coffeetable.app
+127.0.0.1 media-api
 ```
 
 Now you can run the stack:
