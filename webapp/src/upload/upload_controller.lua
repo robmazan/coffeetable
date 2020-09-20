@@ -1,17 +1,16 @@
-local session = require('resty.session').open()
 local upload = require('resty.upload')
 local cjson = require('cjson')
 local resty_md5 = require('resty.md5')
 local upload_service = require('upload/upload_service')
 
 local function process_upload(filename, meta, md5_sum)
-    local username = session.data.id_token.preferred_username
+    local username = ngx.var.access_token.preferred_username
     local exif_data = upload_service.read_exif(filename)
     ngx.say(cjson.encode(exif_data))
     ngx.exit(ngx.HTTP_OK)
 end
 
-if not session.data or not session.data.id_token then
+if not ngx.var.access_token then
     ngx.exit(ngx.HTTP_UNAUTHORIZED)
 end
 

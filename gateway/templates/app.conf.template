@@ -6,11 +6,24 @@ server {
     listen 80;
     listen 443 ssl;
     server_name $APP_SERVER_NAME;
-    
+
     ssl_certificate $APP_CERT_FILE;
     ssl_certificate_key $APP_CERT_KEY_FILE;
 
+    set $lua_root $LUA_ROOT;
+    set $domain_name $DOMAIN_NAME;
+
+    lua_ssl_trusted_certificate $AUTH_CERT_FILE;
+    
+    set $session_cookie_domain ".$domain_name";
+    set $session_cookie_samesite "off";
+    set $oidc_discovery_url $OIDC_DISCOVERY_URL;
+    set $oidc_client_id $OIDC_CLIENT_ID;
+    set $oidc_client_secret $OIDC_CLIENT_SECRET;
+
     location / {
+        access_by_lua_file $lua_root/access.app.lua;
+
         client_max_body_size 768M;
 
         proxy_set_header X-Forwarded-Host $host:$server_port;

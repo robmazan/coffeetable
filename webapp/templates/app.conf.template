@@ -11,6 +11,9 @@ server {
     set $oidc_client_id $OIDC_CLIENT_ID;
     set $oidc_client_secret $OIDC_CLIENT_SECRET;
 
+    # Access token will be set by access.app.lua:
+    set $access_token ""; 
+
     location /upload {
         limit_except POST { deny all; }
         client_max_body_size 768M;

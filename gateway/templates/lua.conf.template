@@ -1,0 +1,7 @@
+lua_package_path "$OPM_PACKAGES_PATH/lualib/?.lua;/opt/coffeetable/?.lua;;";
+lua_package_cpath "$OPM_PACKAGES_PATH/lualib/?.so;;";
+
+# cache for discovery metadata documents
+lua_shared_dict discovery 1m;
+# cache for JWKs
+lua_shared_dict jwks 1m;

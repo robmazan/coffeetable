@@ -1,12 +1,14 @@
 version: '2.0'
 services:
   gateway: 
-    # Implement auth enforcement + bearer token passing
     build: ./gateway
     volumes:
       - ./.docker/certs:/etc/nginx/certs
       - ./gateway/templates:/etc/nginx/templates
+      - ./gateway/src:/lua
     environment:
+      - LUA_ROOT=/lua
+      - DOMAIN_NAME="coffeetable.app"
       - APP_CERT_FILE="/etc/nginx/certs/selfsigned.app.crt"
       - APP_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.app.key"
       - APP_SERVER_NAME="coffeetable.app"
@@ -19,6 +21,9 @@ services:
       - MEDIA_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.media.key"
       - MEDIA_SERVER_NAME="media.coffeetable.app"
       - MEDIA_SERVER_HOST="media"
+      - OIDC_DISCOVERY_URL="https://auth.coffeetable.app/auth/realms/Family/.well-known/openid-configuration"
+      - OIDC_CLIENT_ID="coffeetable"
+      - OIDC_CLIENT_SECRET="a9ee35e3-0334-41de-b348-7b55780d9e09"
     networks:
       coffeetable:
         aliases: 
@@ -60,8 +65,6 @@ services:
       - AUTH_CERT_FILE="/etc/nginx/certs/selfsigned.auth.crt"
       - AUTH_CERT_KEY_FILE="/etc/nginx/certs/selfsigned.auth.key"
       - OIDC_DISCOVERY_URL="https://auth.coffeetable.app/auth/realms/Family/.well-known/openid-configuration"
-      - OIDC_CLIENT_ID="coffeetable"
-      - OIDC_CLIENT_SECRET="a9ee35e3-0334-41de-b348-7b55780d9e09"
     networks:
       coffeetable:
 
