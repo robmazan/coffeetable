@@ -63,11 +63,12 @@ services:
     volumes: 
       - ./media-api/sql:/flyway/sql
     
-  postgrest:
+  media-api:
     image: postgrest/postgrest
     depends_on:
       - postgres
     environment: 
+      - PGRST_SERVER_HOST=media-api
       - PGRST_DB_URI=postgres://postgres:SecurePostgresPassword@postgres:5432/coffeetable
       - PGRST_DB_SCHEMA=api
       - PGRST_DB_ANON_ROLE=postgres
@@ -81,7 +82,7 @@ services:
     expose:
       - "8080"
     environment:
-      API_URL: http://localhost:3000/
+      API_URL: http://media-api:3000/
 
   spa:
     build: ./spa
