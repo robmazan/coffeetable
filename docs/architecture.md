@@ -91,7 +91,7 @@ PostgreSQL is a leading DB on its own, but with Postgrest it really shines in th
 
 Keycloak is a pretty standard solution to manage user authentication and authorization. For the authentication part, it supports OIDC, and this way it can be used easily with OpenResty (thanks to the `lua-resty-openidc` package), and Postgrest supports JWTs out of the box.
 
-For the authorization User-Managed Access (UMA for short) is a standard gaining more and more popularity as it provides full privacy visibility and control for the users above their resources. As Keycloak implements UMA it can cover the authorization part completely.
+For the authorization User-Managed Access (UMA for short) is a standard gaining more and more popularity as it provides full privacy visibility and control for the users over their resources. As Keycloak implements UMA it can cover the authorization part completely.
 
 ## Solution architecture overview
 
